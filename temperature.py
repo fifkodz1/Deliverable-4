@@ -64,3 +64,73 @@ class Temperature:
         if self._unit == "C":
             return self._value + 273.15
         return (self._value - 32) * 5 / 9 + 273.15  
+
+    def convert_to(self, target_unit: str) -> "Temperature":
+        """Return a new Temperature converted to the target unit."""
+        if not isinstance(target_unit, str):
+            raise ValueError("Target unit must be a string.")
+
+        normalized_unit = target_unit.upper()
+
+        if normalized_unit not in self.VALID_UNITS:
+            raise ValueError("Target unit must be 'C', 'F', or 'K'.")
+
+        if normalized_unit == "C":
+            converted_value = self.to_celsius()
+        elif normalized_unit == "F":
+            converted_value = self.to_fahrenheit()
+        else:
+            converted_value = self.to_kelvin()
+
+        return Temperature(converted_value, normalized_unit)
+
+    def __repr__(self) -> str:
+        """Return an unambiguous representation of the temperature."""
+        return f"Temperature({self._value!r}, '{self._unit}')"
+
+    def __str__(self) -> str:
+        """Return a human-readable representation of the temperature."""
+        return f"{self._value:.2f} °{self._unit}"
+
+    def __eq__(self, other: object):
+        """Return whether two temperatures are equal."""
+        if not isinstance(other, Temperature):
+            return NotImplemented
+
+        difference = abs(self.to_celsius() - other.to_celsius())
+        return difference <= self.TOLERANCE
+
+    def __ne__(self, other: object):
+        """Return whether two temperatures are different."""
+        if not isinstance(other, Temperature):
+            return NotImplemented
+
+        return not self == other
+
+    def __lt__(self, other: object):
+        """Return whether this temperature is lower than another."""
+        if not isinstance(other, Temperature):
+            return NotImplemented
+
+        return self.to_celsius() < other.to_celsius() - self.TOLERANCE
+
+    def __le__(self, other: object):
+        """Return whether this temperature is lower than or equal to another."""
+        if not isinstance(other, Temperature):
+            return NotImplemented
+
+        return self.to_celsius() <= other.to_celsius() + self.TOLERANCE
+
+    def __gt__(self, other: object):
+        """Return whether this temperature is greater than another."""
+        if not isinstance(other, Temperature):
+            return NotImplemented
+
+        return self.to_celsius() > other.to_celsius() + self.TOLERANCE
+
+    def __ge__(self, other: object):
+        """Return whether this temperature is greater than or equal to another."""
+        if not isinstance(other, Temperature):
+            return NotImplemented
+
+        return self.to_celsius() >= other.to_celsius() - self.TOLERANCE
