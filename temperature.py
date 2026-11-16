@@ -40,3 +40,27 @@ class Temperature:
     def unit(self) -> str:
         """Return the temperature unit."""
         return self._unit
+
+    def to_celsius(self) -> float:
+        """Return the temperature converted to Celsius."""
+        if self._unit == "C":
+            return self._value
+        if self._unit == "F":
+            return (self._value - 32) * 5 / 9
+        return self._value - 273.15
+
+    def to_fahrenheit(self) -> float:
+        """Return the temperature converted to Fahrenheit."""
+        if self._unit == "F":
+            return self._value
+        if self._unit == "C":
+            return self._value * 9 / 5 + 32
+        return (self._value - 273.15) * 9 / 5 + 32
+
+    def to_kelvin(self) -> float:
+        """Return the temperature converted to Kelvin."""
+        if self._unit == "K":
+            return self._value
+        if self._unit == "C":
+            return self._value + 273.15
+        return (self._value - 32) * 5 / 9 + 273.15  
